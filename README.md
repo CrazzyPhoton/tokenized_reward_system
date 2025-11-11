@@ -1,6 +1,6 @@
 # Tokenized Reward System
 
-A decentralized application (dApp) for managing tokenized rewards on the Ethereum blockchain. This project consists of a Hardhat-based smart contract development environment and a Next.js frontend for interacting with the deployed contracts.
+A decentralized application (dApp) for managing tokenized rewards on the Ethereum blockchain. This project consists of a Hardhat-based smart contract development environment and a Next.js frontend for interacting with the deployed contract.
 
 ---
 
@@ -8,6 +8,7 @@ A decentralized application (dApp) for managing tokenized rewards on the Ethereu
 
 - [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
+- [Installation](#installation)
 - [A. Hardhat Setup](#a-hardhat-setup)
   - [1. Environment Variables Configuration](#1-environment-variables-configuration)
   - [2. Deploying RewardToken.sol to Sepolia](#2-deploying-rewardtokensol-to-sepolia)
@@ -46,8 +47,18 @@ Before getting started, ensure you have the following installed:
 - **Node.js** (v16 or higher)
 - **MetaMask** or another Web3 wallet
 - **Sepolia testnet ETH** (obtain from a faucet)
+- **VS Code** (or any code editor of your choice)
 
 ---
+
+## Installation
+
+Git clone the repository to your local machine:
+
+```bash
+git clone https://github.com/CrazzyPhoton/tokenized_reward_system.git
+cd tokenized_reward_system
+```
 
 ## A. Hardhat Setup
 
