@@ -186,7 +186,7 @@ export default function Home() {
 
   return (
     <>
-      {account.isDisconnected ? (
+      {account.isDisconnected || account.isConnecting ? (
         <div className="flex flex-col h-dvh max-h-[calc(100dvh-(var(--spacing)*20))] items-center gap-7 w-full justify-center">
           <h1 className="text-6xl font-bold">
             Reward & transfer PRT tokens to users
@@ -274,7 +274,11 @@ export default function Home() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full p-3 mt-4 rounded-lg hover:rounded-3xl transition-all duration-300 bg-black text-white font-bold"
+                  className={`w-full p-3 mt-4 rounded-lg hover:rounded-3xl transition-all duration-300 bg-black text-white font-bold ${
+                    account.address !== contractOwner.data
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
                   disabled={
                     account.address !== contractOwner.data ||
                     incorrectAddressError !== "" ||
