@@ -218,7 +218,6 @@ Connect your MetaMask wallet (configured to Sepolia testnet) and interact with y
 ## Additional Resources
 
 - [Hardhat Documentation](https://hardhat.org/docs)
-- [Hardhat 3 Getting Started](https://hardhat.org/hardhat-runner/docs/getting-started)
 - [Hardhat Ignition Guide](https://hardhat.org/ignition/docs/getting-started)
 - [Reown Documentation](https://docs.reown.com/)
 - [Next.js Documentation](https://nextjs.org/docs)
