@@ -2,6 +2,9 @@
 
 A decentralized application (dApp) for managing tokenized rewards on the Ethereum blockchain. This project consists of a Hardhat-based smart contract development environment and a Next.js frontend for interacting with the deployed contract.
 
+View live dapp:
+[https://tokenized-reward-system.vercel.app/](https://tokenized-reward-system.vercel.app/)
+
 ---
 
 ## Table of Contents
