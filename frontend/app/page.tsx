@@ -187,18 +187,30 @@ export default function Home() {
   return (
     <>
       {account.isDisconnected || account.isConnecting ? (
-        <div className="flex flex-col h-dvh max-h-[calc(100dvh-(var(--spacing)*20))] items-center gap-7 w-full justify-center">
-          <h1 className="text-6xl font-bold">
-            Reward & transfer PRT tokens to users
-          </h1>
-          <span className="text-2xl font-mono">
-            Please connect your wallet to continue
-          </span>
-        </div>
-      ) : (
         <>
+          <div className="hidden md:flex flex-col h-dvh max-h-[calc(100dvh-(var(--spacing)*20))] items-center gap-7 w-full justify-center px-6">
+            <h1 className="text-6xl text-center font-bold">
+              Reward & transfer PRT tokens to users
+            </h1>
+            <span className="text-2xl text-center font-mono">
+              Please connect your wallet to continue
+            </span>
+          </div>
+
+          <div className="flex flex-col h-dvh max-h-[calc(100dvh-(var(--spacing)*20))] items-center gap-7 w-full justify-center px-5 md:hidden">
+            <h1 className="text-3xl text-center font-bold">
+              Reward & transfer PRT tokens to users
+            </h1>
+            <span className="text-base text-center font-mono">
+              Please connect your wallet to continue
+            </span>
+          </div>
+        </>
+      ) : (
+        <div className="">
           <div className="flex flex-col h-dvh max-h-[calc(100dvh-(var(--spacing)*20))] justify-start items-center w-full px-10 py-10 gap-14">
-            <div className="flex gap-5">
+            {/* XL Screen */}
+            <div className="hidden xl:flex gap-5">
               <span className="text-xl font-mono">
                 Connected Address{" "}
                 {account.address !== contractOwner.data
@@ -215,7 +227,45 @@ export default function Home() {
                 PRT
               </span>
             </div>
-            <div className="flex items-start justify-between w-full px-32 h-full">
+
+            {/* MD AND LG Screen */}
+            <div className="hidden md:flex flex-col items-center gap-10 xl:hidden">
+              <span className="text-xl text-center font-mono">
+                Connected Address{" "}
+                {account.address !== contractOwner.data
+                  ? "(User)"
+                  : "(Contract Owner)"}
+                : {account.address}{" "}
+              </span>
+              <span className="text-xl font-mono">
+                Token Balance:{" "}
+                {accountPRTBalanceInWei.data
+                  ? formatUnits(accountPRTBalanceInWei.data as bigint, 18)
+                  : "0"}{" "}
+                PRT
+              </span>
+            </div>
+
+            {/* Below MD Screens */}
+            <div className="flex flex-col items-center gap-10 md:hidden">
+              <span className="text-lg wrap-anywhere text-center font-mono">
+                Connected Address{" "}
+                {account.address !== contractOwner.data
+                  ? "(User)"
+                  : "(Contract Owner)"}
+                : {account.address}{" "}
+              </span>
+              <span className="text-lg text-center font-mono">
+                Token Balance:{" "}
+                {accountPRTBalanceInWei.data
+                  ? formatUnits(accountPRTBalanceInWei.data as bigint, 18)
+                  : "0"}{" "}
+                PRT
+              </span>
+            </div>
+
+            {/* FOR XL AND GREATER SCREENS */}
+            <div className="hidden xl:flex items-start justify-between w-full px-32 h-full gap-14">
               {/* REWARD TOKENS UI */}
               <form
                 onSubmit={handleSendReward}
@@ -375,7 +425,332 @@ export default function Home() {
                 </button>
               </form>
             </div>
+
+            {/* FOR MD AND LG SCREENS */}
+            <div className="hidden md:flex flex-col items-center w-full px-32 gap-14 xl:hidden">
+              {/* REWARD TOKENS UI */}
+              <form
+                onSubmit={handleSendReward}
+                className="flex flex-col gap-3 items-center justify-start py-10 px-8 rounded-3xl border-3 w-lg"
+              >
+                <span className="text-3xl font-bold">
+                  Reward User PRT Tokens
+                </span>
+                <span className="text-base text-gray-500 font-mono">
+                  {"(For Contract Owner)"}
+                </span>
+                <div className="flex flex-col w-full gap-2 items-start justify-center">
+                  <label htmlFor="reward-address" className="text-lg font-mono">
+                    Wallet address
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter wallet address to reward"
+                    className="w-full p-3 font-mono rounded-lg hover:rounded-3xl transition-all duration-300 border-2 focus:outline-none placeholder:text-gray-400 placeholder:font-mono"
+                    value={rewardAddress}
+                    onChange={handleRewardAddressChange}
+                    disabled={
+                      sendReward.isPending || waitForSendRewardTx.isLoading
+                    }
+                    required
+                  />
+                  <span className="text-red-500 font-mono">
+                    {incorrectAddressError}
+                  </span>
+                </div>
+                <div className="flex flex-col w-full gap-2 items-start justify-center">
+                  <label htmlFor="reward-amount" className="text-lg font-mono">
+                    Reward amount
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max={
+                      accountPRTBalanceInWei.data
+                        ? formatUnits(accountPRTBalanceInWei.data as bigint, 18)
+                        : "0"
+                    }
+                    value={rewardAmount}
+                    onChange={handleRewardAmountChange}
+                    onKeyDown={blockInvalidChar}
+                    disabled={
+                      sendReward.isPending || waitForSendRewardTx.isLoading
+                    }
+                    required
+                    placeholder="Enter amount to reward"
+                    className="w-full p-3 font-mono rounded-lg hover:rounded-3xl transition-all duration-300 border-2 focus:outline-none placeholder:text-gray-400 placeholder:font-mono"
+                  />
+                  <span className="text-red-500 font-mono">
+                    {incorrectAmountError}
+                  </span>
+                </div>
+                <button
+                  type="submit"
+                  className={`w-full p-3 mt-4 rounded-lg hover:rounded-3xl transition-all duration-300 bg-black text-white font-bold ${
+                    account.address !== contractOwner.data
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                  disabled={
+                    account.address !== contractOwner.data ||
+                    incorrectAddressError !== "" ||
+                    incorrectAmountError !== "" ||
+                    // rewardAddress === "" ||
+                    // rewardAmount === "" ||
+                    sendReward.isPending ||
+                    waitForSendRewardTx.isLoading
+                  }
+                >
+                  {sendReward.isPending || waitForSendRewardTx.isLoading
+                    ? `Rewarding ${rewardAmount} PRT ...`
+                    : "Reward User"}
+                </button>
+              </form>
+
+              {/* TRANSFER TOKENS UI */}
+              <form
+                onSubmit={handleTransferTokens}
+                className="flex flex-col gap-3 items-center justify-start py-10 px-8 mb-16 rounded-3xl border-3 w-lg"
+              >
+                <span className="text-3xl font-bold">Transfer PRT Tokens</span>
+                <span className="text-base text-gray-500 font-mono">
+                  {"(For Users & Contract Owner)"}
+                </span>
+                <div className="flex flex-col w-full gap-2 items-start justify-center">
+                  <label
+                    htmlFor="transfer-address"
+                    className="text-lg font-mono"
+                  >
+                    Wallet address
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter wallet address to transfer tokens"
+                    className="w-full p-3 font-mono rounded-lg hover:rounded-3xl transition-all duration-300 border-2 focus:outline-none placeholder:text-gray-400 placeholder:font-mono"
+                    value={transferAddress}
+                    onChange={handleTransferAddressChange}
+                    disabled={
+                      transferTokens.isPending ||
+                      waitForTransferTokensTx.isLoading
+                    }
+                    required
+                  />
+                  <span className="text-red-500 font-mono">
+                    {incorrectTransferAddressError}
+                  </span>
+                </div>
+                <div className="flex flex-col w-full gap-2 items-start justify-center">
+                  <label
+                    htmlFor="transfer-amount"
+                    className="text-lg font-mono"
+                  >
+                    Transfer amount
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max={
+                      accountPRTBalanceInWei.data
+                        ? formatUnits(accountPRTBalanceInWei.data as bigint, 18)
+                        : "0"
+                    }
+                    value={transferAmount}
+                    onChange={handleTransferAmountChange}
+                    onKeyDown={blockInvalidChar}
+                    disabled={
+                      transferTokens.isPending ||
+                      waitForTransferTokensTx.isLoading
+                    }
+                    required
+                    placeholder="Enter amount to transfer"
+                    className="w-full p-3 font-mono rounded-lg hover:rounded-3xl transition-all duration-300 border-2 focus:outline-none placeholder:text-gray-400 placeholder:font-mono"
+                  />
+                  <span className="text-red-500 font-mono">
+                    {incorrectTransferAmountError}
+                  </span>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full p-3 mt-4 rounded-lg hover:rounded-3xl transition-all duration-300 bg-black text-white font-bold"
+                  disabled={
+                    incorrectTransferAddressError !== "" ||
+                    incorrectTransferAmountError !== "" ||
+                    // transferAddress === "" ||
+                    // transferAmount === "" ||
+                    transferTokens.isPending ||
+                    waitForTransferTokensTx.isLoading
+                  }
+                >
+                  {transferTokens.isPending || waitForTransferTokensTx.isLoading
+                    ? `Transferring ${transferAmount} PRT ...`
+                    : "Transfer Tokens"}
+                </button>
+              </form>
+            </div>
+
+            {/* FOR BELOW MD SCREENS */}
+            <div className="flex flex-col items-center w-full px-32 gap-14 md:hidden">
+              {/* REWARD TOKENS UI */}
+              <form
+                onSubmit={handleSendReward}
+                className="flex flex-col gap-3 items-center justify-start py-10 px-8 rounded-3xl border-3 w-xs"
+              >
+                <span className="text-2xl text-center wrap-anywhere font-bold">
+                  Reward User PRT Tokens
+                </span>
+                <span className="text-sm text-center wrap-anywhere text-gray-500 font-mono">
+                  {"(For Contract Owner)"}
+                </span>
+                <div className="flex flex-col w-full gap-2 items-start justify-center">
+                  <label htmlFor="reward-address" className="text-base wrap-anywhere font-mono">
+                    Wallet address
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter wallet address"
+                    className="w-full p-2 wrap-anywhere placeholder:wrap-anywhere font-mono rounded-lg hover:rounded-3xl transition-all duration-300 border-2 focus:outline-none placeholder:text-gray-400 placeholder:text-sm placeholder:font-mono"
+                    value={rewardAddress}
+                    onChange={handleRewardAddressChange}
+                    disabled={
+                      sendReward.isPending || waitForSendRewardTx.isLoading
+                    }
+                    required
+                  />
+                  <span className="text-red-500 wrap-anywhere text-sm font-mono">
+                    {incorrectAddressError}
+                  </span>
+                </div>
+                <div className="flex flex-col w-full gap-2 items-start justify-center">
+                  <label htmlFor="reward-amount" className="text-base wrap-anywhere font-mono">
+                    Reward amount
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max={
+                      accountPRTBalanceInWei.data
+                        ? formatUnits(accountPRTBalanceInWei.data as bigint, 18)
+                        : "0"
+                    }
+                    value={rewardAmount}
+                    onChange={handleRewardAmountChange}
+                    onKeyDown={blockInvalidChar}
+                    disabled={
+                      sendReward.isPending || waitForSendRewardTx.isLoading
+                    }
+                    required
+                    placeholder="Enter reward amount"
+                    className="w-full wrap-anywhere placeholder:wrap-anywhere p-2 font-mono rounded-lg hover:rounded-3xl transition-all duration-300 border-2 focus:outline-none placeholder:text-gray-400 placeholder:text-sm placeholder:font-mono"
+                  />
+                  <span className="text-red-500 wrap-anywhere text-sm font-mono">
+                    {incorrectAmountError}
+                  </span>
+                </div>
+                <button
+                  type="submit"
+                  className={`w-full py-3 px-2 mt-4 rounded-lg hover:rounded-3xl transition-all duration-300 bg-black text-white font-bold wrap-anywhere ${
+                    account.address !== contractOwner.data
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                  disabled={
+                    account.address !== contractOwner.data ||
+                    incorrectAddressError !== "" ||
+                    incorrectAmountError !== "" ||
+                    // rewardAddress === "" ||
+                    // rewardAmount === "" ||
+                    sendReward.isPending ||
+                    waitForSendRewardTx.isLoading
+                  }
+                >
+                  {sendReward.isPending || waitForSendRewardTx.isLoading
+                    ? `Rewarding ${rewardAmount} PRT ...`
+                    : "Reward User"}
+                </button>
+              </form>
+
+              {/* TRANSFER TOKENS UI */}
+              <form
+                onSubmit={handleTransferTokens}
+                className="flex flex-col gap-3 items-center justify-start py-10 px-8 mb-16 rounded-3xl border-3 w-xs"
+              >
+                <span className="text-2xl text-center wrap-anywhere font-bold">Transfer PRT Tokens</span>
+                <span className="text-sm text-center wrap-anywhere text-gray-500 font-mono">
+                  {"(For Users & Contract Owner)"}
+                </span>
+                <div className="flex flex-col w-full gap-2 items-start justify-center">
+                  <label
+                    htmlFor="transfer-address"
+                    className="text-base wrap-anywhere font-mono"
+                  >
+                    Wallet address
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter wallet address"
+                    className="w-full p-2 wrap-anywhere placeholder:wrap-anywhere font-mono rounded-lg hover:rounded-3xl transition-all duration-300 border-2 focus:outline-none placeholder:text-gray-400 placeholder:text-sm placeholder:font-mono"
+                    value={transferAddress}
+                    onChange={handleTransferAddressChange}
+                    disabled={
+                      transferTokens.isPending ||
+                      waitForTransferTokensTx.isLoading
+                    }
+                    required
+                  />
+                  <span className="text-red-500 text-sm wrap-anywhere font-mono">
+                    {incorrectTransferAddressError}
+                  </span>
+                </div>
+                <div className="flex flex-col w-full gap-2 items-start justify-center">
+                  <label
+                    htmlFor="transfer-amount"
+                    className="text-base wrap-anywhere font-mono"
+                  >
+                    Transfer amount
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max={
+                      accountPRTBalanceInWei.data
+                        ? formatUnits(accountPRTBalanceInWei.data as bigint, 18)
+                        : "0"
+                    }
+                    value={transferAmount}
+                    onChange={handleTransferAmountChange}
+                    onKeyDown={blockInvalidChar}
+                    disabled={
+                      transferTokens.isPending ||
+                      waitForTransferTokensTx.isLoading
+                    }
+                    required
+                    placeholder="Enter amount to transfer"
+                    className="w-full wrap-anywhere placeholder:wrap-anywhere p-2 font-mono rounded-lg hover:rounded-3xl transition-all duration-300 border-2 focus:outline-none placeholder:text-gray-400 placeholder:text-sm placeholder:font-mono"
+                  />
+                  <span className="text-red-500 text-sm wrap-anywhere font-mono">
+                    {incorrectTransferAmountError}
+                  </span>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-3 px-2 mt-4 rounded-lg hover:rounded-3xl transition-all duration-300 bg-black text-white font-bold wrap-anywhere"
+                  disabled={
+                    incorrectTransferAddressError !== "" ||
+                    incorrectTransferAmountError !== "" ||
+                    // transferAddress === "" ||
+                    // transferAmount === "" ||
+                    transferTokens.isPending ||
+                    waitForTransferTokensTx.isLoading
+                  }
+                >
+                  {transferTokens.isPending || waitForTransferTokensTx.isLoading
+                    ? `Transferring ${transferAmount} PRT ...`
+                    : "Transfer Tokens"}
+                </button>
+              </form>
+            </div>
           </div>
+
           {waitForSendRewardTx.isSuccess && (
             <div
               className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
@@ -406,7 +781,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div className="flex flex-col items-center gap-2">
-                    <span className="text-lg text-center font-mono text-gray-700">
+                    <span className="text-lg text-center wrap-anywhere font-mono text-gray-700">
                       Successfully sent reward of {""}
                       <span className="font-bold text-black">
                         {rewardAmount} PRT
@@ -422,7 +797,7 @@ export default function Home() {
                       setRewardAddress("");
                       setRewardAmount("");
                     }}
-                    className="w-1/3 px-6 py-3 mt-4 bg-black text-white font-bold rounded-lg hover:rounded-3xl transition-all duration-300"
+                    className="w-1/3 px-6 py-3 mt-4 bg-black text-white flex justify-center font-bold rounded-lg hover:rounded-3xl transition-all duration-300"
                   >
                     Close
                   </button>
@@ -461,7 +836,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div className="flex flex-col items-center gap-2">
-                    <span className="text-lg text-center font-mono text-gray-700">
+                    <span className="text-lg wrap-anywhere text-center font-mono text-gray-700">
                       Successfully transferred {""}
                       <span className="font-bold text-black">
                         {transferAmount} PRT
@@ -477,7 +852,7 @@ export default function Home() {
                       setTransferAddress("");
                       setTransferAmount("");
                     }}
-                    className="w-1/3 px-6 py-3 mt-4 bg-black text-white font-bold rounded-lg hover:rounded-3xl transition-all duration-300"
+                    className="w-1/3 px-6 py-3 mt-4 bg-black text-white flex justify-center font-bold rounded-lg hover:rounded-3xl transition-all duration-300"
                   >
                     Close
                   </button>
@@ -485,7 +860,7 @@ export default function Home() {
               </div>
             </div>
           )}
-        </>
+        </div>
       )}
     </>
   );
