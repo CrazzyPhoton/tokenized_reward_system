@@ -173,7 +173,7 @@ After deploying your `RewardToken` contract to Sepolia, you need to update the f
 3. Replace it with your deployed contract address:
 
 ```typescript
-export const contractConfig = {
+export const contract = {
   address: "0xYourDeployedContractAddressHere", // Replace with your contract address
   abi: [
     // ABI array
