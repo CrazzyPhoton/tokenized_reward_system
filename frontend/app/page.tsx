@@ -10,6 +10,7 @@ import {
 import { contract } from "../utils/contract";
 import { formatUnits } from "viem";
 import { sepolia } from "wagmi/chains";
+import Link from "next/link";
 
 export default function Home() {
   const account = useAccount();
@@ -602,7 +603,10 @@ export default function Home() {
                   {"(For Contract Owner)"}
                 </span>
                 <div className="flex flex-col w-full gap-2 items-start justify-center">
-                  <label htmlFor="reward-address" className="text-base wrap-anywhere font-mono">
+                  <label
+                    htmlFor="reward-address"
+                    className="text-base wrap-anywhere font-mono"
+                  >
                     Wallet address
                   </label>
                   <input
@@ -621,7 +625,10 @@ export default function Home() {
                   </span>
                 </div>
                 <div className="flex flex-col w-full gap-2 items-start justify-center">
-                  <label htmlFor="reward-amount" className="text-base wrap-anywhere font-mono">
+                  <label
+                    htmlFor="reward-amount"
+                    className="text-base wrap-anywhere font-mono"
+                  >
                     Reward amount
                   </label>
                   <input
@@ -674,7 +681,9 @@ export default function Home() {
                 onSubmit={handleTransferTokens}
                 className="flex flex-col gap-3 items-center justify-start py-10 px-8 mb-16 rounded-3xl border-3 w-xs"
               >
-                <span className="text-2xl text-center wrap-anywhere font-bold">Transfer PRT Tokens</span>
+                <span className="text-2xl text-center wrap-anywhere font-bold">
+                  Transfer PRT Tokens
+                </span>
                 <span className="text-sm text-center wrap-anywhere text-gray-500 font-mono">
                   {"(For Users & Contract Owner)"}
                 </span>
@@ -761,7 +770,7 @@ export default function Home() {
               }}
             >
               <div
-                className="bg-white rounded-3xl p-10 shadow-2xl max-w-lg w-full mx-4"
+                className="bg-white rounded-3xl py-10 px-7 shadow-2xl max-w-lg w-full mx-4"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex flex-col items-center gap-5">
@@ -789,6 +798,14 @@ export default function Home() {
                       {""}
                       to {rewardAddress}
                     </span>
+                    <Link
+                      href={`https://sepolia.etherscan.io/tx/${rewardTxHash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="wrap-anywhere font-sans mt-2 underline underline-offset-2"
+                    >
+                      View On Block Explorer
+                    </Link>
                   </div>
                   <button
                     onClick={(e) => {
@@ -816,7 +833,7 @@ export default function Home() {
               }}
             >
               <div
-                className="bg-white rounded-3xl p-10 shadow-2xl max-w-lg w-full mx-4"
+                className="bg-white rounded-3xl py-10 px-7 shadow-2xl max-w-lg w-full mx-4"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex flex-col items-center gap-5">
@@ -844,6 +861,14 @@ export default function Home() {
                       {""}
                       to {transferAddress}
                     </span>
+                    <Link
+                      href={`https://sepolia.etherscan.io/tx/${transferTxHash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="wrap-anywhere font-sans mt-2 underline underline-offset-2"
+                    >
+                      View On Block Explorer
+                    </Link>
                   </div>
                   <button
                     onClick={(e) => {
